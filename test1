@@ -1,3 +1,124 @@
+char *ft_strjoin(char *s1, char *s2)
+{
+	char	*join;
+	int		i;
+	int		j;
+	
+	i = ft_strlen(s1);
+	join = malloc((sizeof(char) * (i + ft_strlen(s2) + 1);
+	if (!join)
+		return (NULL)
+	join = s1;
+	j = 0;
+	while (s2[j] != '\0')
+	{
+		join[i] = s2[j];
+		i++;
+		j++;
+	}
+	return (join);
+}
+
+size_t	ft_strlen(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] != '\0')
+		i++;
+	return (i);
+}
+
+char	*ft_strchr(const char *str, int c)
+{
+	int	i;
+
+	i = 0;
+	if (c == '\0')
+		return (&((char *)str)[ft_strlen(((char *)str))]);
+	while (str[i] != '\0' && str[i] != c)
+		i++;
+	if (str[i] == c)
+		return (&((char *)str)[i]);
+	return (0);
+}
+
+char	*ft_read_str(int fd, char *leftover)
+{
+	char	*buf;
+	int		n_bytes;
+	
+	buff = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buf)
+		return (NULL);
+	n_bytes = 1;
+	while (!ft_strchr(leftover, '\n') && n_bytes != 0)
+	{
+		n_bytes = read(fd, buf, BUFFER_SIZE);
+		if (n_bytes == -1)
+		{
+			free(buf);
+			return (NULL);
+		}
+		buff[n_bytes] = '\0';
+		leftover = ft_strjoin(leftover, buf);
+	}
+	free(buf);
+	return (leftover);
+}
+
+char *ft_get_line(char *leftover)
+{
+	char	*str;
+	int		i;
+	
+	str = malloc(sizeof(char) * (ft_strlen(leftover) + 1));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (leftover[i] != '\n')
+	{
+		str[i] = leftover[i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
+}
+
+char *ft_get_left(char	*str)
+{
+	char	*left;
+	int		i;
+	int		j;
+	
+	left = malloc(sizeof(char) * (ft_strlen(str) + 1));
+	if (!left)
+		return (NULL);
+	i = 0;
+	while (str[i] != '\n')
+		i++;
+	j = 0;
+	while (str[i] != '\0')
+	{
+		left[j] = str[i];
+		i++;
+		j++;
+	}
+	left[j] = '\0';
+	return (left);
+}
+
 char *get_next_line(int fd)
 {
-  
+	static char *leftover;
+	char	*line;
+	
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	leftover = ft_read_str(fd, leftover);
+	if (!leftover)
+		return (NULL);
+	line = ft_get_line(leftover);
+	leftover = ft_get_left(leftover);
+	return (line);
+}
